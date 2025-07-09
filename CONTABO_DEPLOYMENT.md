@@ -41,30 +41,24 @@ node --version
 npm --version
 ```
 
-## Step 4: Install PostgreSQL
+## Step 4: Install PostgreSQL Client (External Database)
+
+**Using External PostgreSQL Database:**
+- **Host**: maketrack.zaf-tech.io
+- **Username**: maketrack
+- **Database**: postgres  
+- **Password**: 1L1kETuRt13$!
+- **Port**: 5432
 
 ```bash
-# Install PostgreSQL 15
-apt install -y postgresql postgresql-contrib
+# Install PostgreSQL client only (no server needed)
+apt install -y postgresql-client
 
-# Start and enable PostgreSQL
-systemctl start postgresql
-systemctl enable postgresql
-
-# Create database and user
-sudo -u postgres psql << EOF
-CREATE DATABASE opsease;
-CREATE USER opsease_user WITH PASSWORD 'OpsEase2025!SecureDB';
-GRANT ALL PRIVILEGES ON DATABASE opsease TO opsease_user;
-GRANT ALL ON SCHEMA public TO opsease_user;
-ALTER USER opsease_user CREATEDB;
-\q
-EOF
-
-# Configure PostgreSQL for local connections
-echo "local   opsease         opsease_user                            md5" >> /etc/postgresql/15/main/pg_hba.conf
-systemctl restart postgresql
+# Test connection to external database
+PGPASSWORD="1L1kETuRt13$!" psql -h maketrack.zaf-tech.io -U maketrack -d postgres -c "SELECT version();"
 ```
+
+**Note**: No local PostgreSQL server installation required since using external database.
 
 ## Step 5: Install Nginx
 
@@ -112,11 +106,29 @@ You have several options to upload your application:
 scp -r . root@5.189.171.19:/var/www/opsease/
 ```
 
-### Option B: Using Git (if you have a repository)
+### Option B: Using Git Repository
+
+**Repository Privacy Options:**
+- **Public Repository**: Can be cloned directly without authentication
+- **Private Repository**: Requires SSH key or personal access token
+
+**For Public Repository:**
 ```bash
 # On the server
 cd /var/www/opsease
 git clone https://github.com/yourusername/opsease.git .
+```
+
+**For Private Repository:**
+```bash
+# Option 1: Using SSH (recommended)
+# First, add your server's SSH key to your Git provider
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+cat ~/.ssh/id_rsa.pub  # Add this to your GitHub/GitLab
+git clone git@github.com:yourusername/opsease.git .
+
+# Option 2: Using Personal Access Token
+git clone https://username:personal_access_token@github.com/yourusername/opsease.git .
 ```
 
 ### Option C: Manual upload via SFTP
@@ -133,7 +145,7 @@ npm install --production
 
 # Create environment file
 cat > .env << 'EOF'
-DATABASE_URL=postgresql://opsease_user:OpsEase2025!SecureDB@localhost:5432/opsease
+DATABASE_URL=postgresql://maketrack:1L1kETuRt13$!@maketrack.zaf-tech.io:5432/postgres
 SESSION_SECRET=MakeTrack2025SecureSessionKey!RandomString123
 NODE_ENV=production
 PORT=5000
