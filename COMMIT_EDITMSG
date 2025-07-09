@@ -1,0 +1,7 @@
+Prepare final deployment package by removing unneeded files
+
+Remove obsolete deployment guides, Docker files, and local DB scripts, creating a streamlined deployment package.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 75c36953-7715-4179-9c15-4dcf27763ae7
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/ea41d6f9-5171-4458-9f1f-f7fc1ac57628/1cc61588-9587-4aa7-897a-70730aefa182.jpg
